@@ -23,6 +23,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	void OpenDoor();
+	void CloseDoor();
 
 public:	
 	// Called every frame
@@ -34,7 +35,11 @@ public:
 	UPROPERTY(EditAnywhere)
 	ATriggerVolume* PressurePlate;
 
-	UPROPERTY(EditAnywhere)
-	AActor* actorThatOpens;
 
+	AActor* player;
+	AActor* thisDoor;
+
+	UPROPERTY(EditAnywhere)
+	float closeDoorDelay = 1.f;
+	float lastTimeOpen;
 };
