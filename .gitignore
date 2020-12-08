@@ -1,0 +1,13 @@
+*/Intermediate/
+*/DerivedDataCache/
+*/Binaries/
+*/Build/
+*/Saved/
+MyProject/Content/StarterContent/
+
+
+*.VC.db
+*.suo
+*.VC.opendb
+*.sln
+*/.vs
