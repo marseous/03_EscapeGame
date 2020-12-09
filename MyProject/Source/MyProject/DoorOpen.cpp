@@ -9,8 +9,6 @@ UDoorOpen::UDoorOpen()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
 
@@ -21,8 +19,6 @@ void UDoorOpen::BeginPlay()
 
 	// ...
 	player = GetWorld()->GetFirstPlayerController()->GetPawn();
-	thisDoor = GetOwner();
-
 }
 
 
@@ -31,10 +27,10 @@ void UDoorOpen::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
 	if (PressurePlate->IsOverlappingActor(player))
 	{
 		OpenDoor();
+		lastTimeOpen = GetWorld()->GetTimeSeconds();
 	}
 
 	if (GetWorld()->GetTimeSeconds() - lastTimeOpen > closeDoorDelay)
@@ -45,11 +41,10 @@ void UDoorOpen::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 void UDoorOpen::OpenDoor()
 {
-	thisDoor->SetActorRotation(FRotator(0.f, -65.f, 0.f));
-	lastTimeOpen = GetWorld()->GetTimeSeconds();
+	GetOwner()->SetActorRotation(FRotator(0.f, -65.f, 0.f));
 }
 
 void UDoorOpen::CloseDoor()
 {
-	thisDoor->SetActorRotation(FRotator(0.f, 0.f, 0.f));
+	GetOwner()->SetActorRotation(FRotator(0.f, 0.f, 0.f));
 }
