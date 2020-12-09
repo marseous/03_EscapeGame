@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
 #include "Components/ActorComponent.h"
 #include "PawnComponent.generated.h"
 
@@ -19,6 +20,7 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
 
 public:	
 	// Called every frame

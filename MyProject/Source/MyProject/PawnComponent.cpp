@@ -18,10 +18,8 @@ UPawnComponent::UPawnComponent()
 void UPawnComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
-	
 }
+
 
 
 // Called every frame
