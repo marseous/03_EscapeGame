@@ -27,6 +27,34 @@ void UPawnComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	FVector PlayerViewPointLocation;
+	FRotator PlayerViewPointRotation;
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+		PlayerViewPointLocation,
+		PlayerViewPointRotation
+	);
+
+	FVector LineTraceEnd = PlayerViewPointLocation + 
+		PlayerViewPointRotation.Vector() * 100.f;
+
+
+	FCollisionQueryParams TraceParams(FName(TEXT("")), false, GetOwner());
+	FCollisionObjectQueryParams OQP(ECollisionChannel::ECC_PhysicsBody);
+	FHitResult Hit;
+	GetWorld()->LineTraceSingleByObjectType(
+		Hit,
+		PlayerViewPointLocation,
+		LineTraceEnd,
+		OQP,
+		TraceParams
+	);
+
+	if (Hit.GetActor())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("HIT: %s "),
+			*Hit.GetActor()->GetName())
+	}
+
+
 }
 
