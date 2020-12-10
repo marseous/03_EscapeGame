@@ -58,3 +58,13 @@ void UPawnComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 }
 
+
+void UPawnComponent::Grab()
+{
+
+}
+
+void UPawnComponent::Release()
+{
+
+}

@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+//#include "Engine.h"
 #include "GameFramework/Actor.h"
-#include "DrawDebugHelpers.h"
 #include "Components/ActorComponent.h"
 #include "PawnComponent.generated.h"
 
@@ -28,4 +28,10 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 		
+private:
+	//UPhysicsHandle* PhysicsHanle = nullptr;
+	//UInputComponent* InputComponent = nullptr;
+
+	void Grab();
+	void Release();
 };
