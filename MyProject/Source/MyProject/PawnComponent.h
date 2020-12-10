@@ -32,4 +32,6 @@ private:
 	void GetPhysicsHandleComponent();
 	void Grab();
 	void Release();
+
+	//FVector LineTraceEnd;
 };

@@ -26,6 +26,24 @@ void UPawnComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	FVector PlayerViewPointLocation;
+	FRotator PlayerViewPointRotation;
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+		PlayerViewPointLocation,
+		PlayerViewPointRotation
+	);
+
+	FVector LineTraceEnd = PlayerViewPointLocation +
+		PlayerViewPointRotation.Vector() * 100.f;
+
+	if (PhysicsHandle->GrabbedComponent)
+	{
+		PhysicsHandle->SetTargetLocation(LineTraceEnd);
+	}
+	else
+	{
+	}
+
 }
 
 
@@ -94,9 +112,20 @@ void UPawnComponent::Grab()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Grab"))
 
-	GetFirstPhysicsBodyInReach();
+	auto ActorToGrab = GetFirstPhysicsBodyInReach();
+
+	
+		PhysicsHandle->GrabComponent(
+			ActorToGrab.GetComponent(),
+			NAME_None,
+			ActorToGrab.GetActor()->GetActorLocation(),
+			false
+		);
+	
 }
 void UPawnComponent::Release()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Release"))
+	UE_LOG(LogTemp, Warning, TEXT("Release"));
+
+	PhysicsHandle->ReleaseComponent();
 }
