@@ -18,6 +18,16 @@ UPawnComponent::UPawnComponent()
 void UPawnComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (!PhysicsHandle)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PhysicsHandle is missing"))
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PhysicsHandle found"))
+	}
 }
 
 

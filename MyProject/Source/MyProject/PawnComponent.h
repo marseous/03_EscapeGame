@@ -3,9 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-//#include "Engine.h"
 #include "GameFramework/Actor.h"
 #include "Components/ActorComponent.h"
+#include "Engine.h"
 #include "PawnComponent.generated.h"
 
 
@@ -29,9 +29,10 @@ public:
 
 		
 private:
-	//UPhysicsHandle* PhysicsHanle = nullptr;
-	//UInputComponent* InputComponent = nullptr;
+	UPhysicsHandleComponent* PhysicsHandle = nullptr;
+	UInputComponent* InputComponent = nullptr;
 
+	
 	void Grab();
 	void Release();
 };
