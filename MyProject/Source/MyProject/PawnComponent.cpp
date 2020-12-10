@@ -10,15 +10,27 @@ UPawnComponent::UPawnComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
 }
-
 
 // Called when the game starts
 void UPawnComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	GetPhysicsHandleComponent();
+	BindInputActions();
+}
+
+// Called every frame
+void UPawnComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+}
+
+
+void UPawnComponent::GetPhysicsHandleComponent()
+{
 	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
 	if (!PhysicsHandle)
 	{
@@ -28,9 +40,11 @@ void UPawnComponent::BeginPlay()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("PhysicsHandle found"))
 	}
-
+}
+void UPawnComponent::BindInputActions()
+{
 	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
-	if (!PhysicsHandle)
+	if (!InputComponent)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("InputComponent is missing"))
 	}
@@ -38,18 +52,13 @@ void UPawnComponent::BeginPlay()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("InputComponent found"))
 
-		InputComponent->BindAction("Grab", EInputEvent::IE_Pressed, this, &UPawnComponent::Grab);
+			InputComponent->BindAction("Grab", EInputEvent::IE_Pressed, this, &UPawnComponent::Grab);
 		InputComponent->BindAction("Grab", EInputEvent::IE_Released, this, &UPawnComponent::Release);
 	}
 }
 
-
-
-// Called every frame
-void UPawnComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+FHitResult UPawnComponent::GetFirstPhysicsBodyInReach() const
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
 	FVector PlayerViewPointLocation;
 	FRotator PlayerViewPointRotation;
 	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
@@ -57,7 +66,7 @@ void UPawnComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 		PlayerViewPointRotation
 	);
 
-	FVector LineTraceEnd = PlayerViewPointLocation + 
+	FVector LineTraceEnd = PlayerViewPointLocation +
 		PlayerViewPointRotation.Vector() * 100.f;
 
 
@@ -78,15 +87,15 @@ void UPawnComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 			*Hit.GetActor()->GetName())
 	}
 
-
+	return Hit;
 }
-
 
 void UPawnComponent::Grab()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Grab"))
-}
 
+	GetFirstPhysicsBodyInReach();
+}
 void UPawnComponent::Release()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Release"))
