@@ -28,6 +28,19 @@ void UPawnComponent::BeginPlay()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("PhysicsHandle found"))
 	}
+
+	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
+	if (!PhysicsHandle)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("InputComponent is missing"))
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("InputComponent found"))
+
+		InputComponent->BindAction("Grab", EInputEvent::IE_Pressed, this, &UPawnComponent::Grab);
+		InputComponent->BindAction("Grab", EInputEvent::IE_Released, this, &UPawnComponent::Release);
+	}
 }
 
 
@@ -71,10 +84,10 @@ void UPawnComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 void UPawnComponent::Grab()
 {
-
+	UE_LOG(LogTemp, Warning, TEXT("Grab"))
 }
 
 void UPawnComponent::Release()
 {
-
+	UE_LOG(LogTemp, Warning, TEXT("Release"))
 }
