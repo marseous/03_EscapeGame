@@ -22,6 +22,7 @@ protected:
 
 	void OpenDoor();
 	void CloseDoor();
+	float GetTotalMassOnPlate();
 
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -30,8 +31,7 @@ public:
 	UPROPERTY(EditAnywhere)		float closeDoorDelay = 1.f;
 								float lastTimeOpen;
 
-	UPROPERTY(EditAnywhere)		ATriggerVolume* PressurePlate;
-								AActor* player;
-								AActor* thisDoor;
+	UPROPERTY(EditAnywhere)		ATriggerVolume* PressurePlate = nullptr;
+								AActor* thisDoor = nullptr;
 
 };

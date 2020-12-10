@@ -17,8 +17,6 @@ void UDoorOpen::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	player = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
 
 
@@ -27,7 +25,7 @@ void UDoorOpen::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (PressurePlate->IsOverlappingActor(player))
+	if (GetTotalMassOnPlate() > 20.f)
 	{
 		OpenDoor();
 		lastTimeOpen = GetWorld()->GetTimeSeconds();
@@ -43,8 +41,26 @@ void UDoorOpen::OpenDoor()
 {
 	GetOwner()->SetActorRotation(FRotator(0.f, -65.f, 0.f));
 }
-
 void UDoorOpen::CloseDoor()
 {
 	GetOwner()->SetActorRotation(FRotator(0.f, 0.f, 0.f));
 }
+
+float UDoorOpen::GetTotalMassOnPlate()
+{
+	float TotalMass = 0.f;
+
+	TSet<AActor*> OverlappingActors;
+	if (PressurePlate != nullptr)
+	{
+		PressurePlate->GetOverlappingActors(OverlappingActors);
+	}
+
+	for (auto& actor : OverlappingActors)
+	{
+		TotalMass += actor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
+	}
+
+	return TotalMass;
+}
+
