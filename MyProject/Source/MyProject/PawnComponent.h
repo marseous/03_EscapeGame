@@ -24,14 +24,17 @@ protected:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
-	FHitResult GetFirstPhysicsBodyInReach() const;
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 	UInputComponent* InputComponent = nullptr;
+
+	FHitResult GetFirstPhysicsBodyInReach();
+	FVector GetReachStart();
+	FVector GetReachEnd();
 
 	void BindInputActions();
 	void GetPhysicsHandleComponent();
 	void Grab();
 	void Release();
 
-	//FVector LineTraceEnd;
+
 };

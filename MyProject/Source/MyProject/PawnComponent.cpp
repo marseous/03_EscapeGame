@@ -3,7 +3,6 @@
 
 #include "PawnComponent.h"
 
-// Sets default values for this component's properties
 UPawnComponent::UPawnComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
@@ -12,7 +11,6 @@ UPawnComponent::UPawnComponent()
 
 }
 
-// Called when the game starts
 void UPawnComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -21,43 +19,41 @@ void UPawnComponent::BeginPlay()
 	BindInputActions();
 }
 
-// Called every frame
 void UPawnComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	FVector PlayerViewPointLocation;
-	FRotator PlayerViewPointRotation;
-	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
-		PlayerViewPointLocation,
-		PlayerViewPointRotation
-	);
-
-	FVector LineTraceEnd = PlayerViewPointLocation +
-		PlayerViewPointRotation.Vector() * 100.f;
-
+	
 	if (PhysicsHandle->GrabbedComponent)
 	{
-		PhysicsHandle->SetTargetLocation(LineTraceEnd);
+		PhysicsHandle->SetTargetLocation(GetReachStart());
 	}
-	else
-	{
-	}
-
 }
-
 
 void UPawnComponent::GetPhysicsHandleComponent()
 {
 	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	if (!PhysicsHandle)
+}
+
+FHitResult UPawnComponent::GetFirstPhysicsBodyInReach()
+{
+	FCollisionQueryParams TraceParams(FName(TEXT("")), false, GetOwner());
+	FCollisionObjectQueryParams OQP(ECollisionChannel::ECC_PhysicsBody);
+	FHitResult Hit;
+	GetWorld()->LineTraceSingleByObjectType(
+		Hit,
+		GetReachStart(),
+		GetReachEnd(),
+		OQP,
+		TraceParams
+	);
+
+	if (Hit.GetActor())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("PhysicsHandle is missing"))
+		UE_LOG(LogTemp, Warning, TEXT("HIT: %s "),
+			*Hit.GetActor()->GetName())
 	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("PhysicsHandle found"))
-	}
+
+	return Hit;
 }
 void UPawnComponent::BindInputActions()
 {
@@ -75,7 +71,7 @@ void UPawnComponent::BindInputActions()
 	}
 }
 
-FHitResult UPawnComponent::GetFirstPhysicsBodyInReach() const
+FVector UPawnComponent::GetReachStart()
 {
 	FVector PlayerViewPointLocation;
 	FRotator PlayerViewPointRotation;
@@ -84,48 +80,34 @@ FHitResult UPawnComponent::GetFirstPhysicsBodyInReach() const
 		PlayerViewPointRotation
 	);
 
-	FVector LineTraceEnd = PlayerViewPointLocation +
-		PlayerViewPointRotation.Vector() * 100.f;
-
-
-	FCollisionQueryParams TraceParams(FName(TEXT("")), false, GetOwner());
-	FCollisionObjectQueryParams OQP(ECollisionChannel::ECC_PhysicsBody);
-	FHitResult Hit;
-	GetWorld()->LineTraceSingleByObjectType(
-		Hit,
+	return PlayerViewPointLocation;
+}
+FVector UPawnComponent::GetReachEnd()
+{
+	FVector PlayerViewPointLocation;
+	FRotator PlayerViewPointRotation;
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
 		PlayerViewPointLocation,
-		LineTraceEnd,
-		OQP,
-		TraceParams
+		PlayerViewPointRotation
 	);
 
-	if (Hit.GetActor())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("HIT: %s "),
-			*Hit.GetActor()->GetName())
-	}
-
-	return Hit;
+	return PlayerViewPointLocation +
+		PlayerViewPointRotation.Vector() * 100.f;
 }
 
 void UPawnComponent::Grab()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Grab"))
-
 	auto ActorToGrab = GetFirstPhysicsBodyInReach();
-
 	
-		PhysicsHandle->GrabComponent(
-			ActorToGrab.GetComponent(),
-			NAME_None,
-			ActorToGrab.GetActor()->GetActorLocation(),
-			false
-		);
-	
+	PhysicsHandle->GrabComponent(
+		ActorToGrab.GetComponent(),
+		NAME_None,
+		ActorToGrab.GetActor()->GetActorLocation(),
+		false
+	);
 }
+
 void UPawnComponent::Release()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Release"));
-
 	PhysicsHandle->ReleaseComponent();
 }
