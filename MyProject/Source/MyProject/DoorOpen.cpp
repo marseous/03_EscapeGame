@@ -16,7 +16,6 @@ UDoorOpen::UDoorOpen()
 void UDoorOpen::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 
@@ -27,24 +26,13 @@ void UDoorOpen::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 	if (GetTotalMassOnPlate() > 20.f)
 	{
-		OpenDoor();
-		lastTimeOpen = GetWorld()->GetTimeSeconds();
+		OnOpen.Broadcast();
 	}
-
-	if (GetWorld()->GetTimeSeconds() - lastTimeOpen > closeDoorDelay)
+	else
 	{
-		CloseDoor();
+		OnClose.Broadcast();
 	}
-}
 
-void UDoorOpen::OpenDoor()
-{
-	//GetOwner()->SetActorRotation(FRotator(0.f, -65.f, 0.f));
-	OpenRequest.Broadcast();
-}
-void UDoorOpen::CloseDoor()
-{
-	GetOwner()->SetActorRotation(FRotator(0.f, 0.f, 0.f));
 }
 
 float UDoorOpen::GetTotalMassOnPlate()

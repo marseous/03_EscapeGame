@@ -21,20 +21,13 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	void OpenDoor();
-	void CloseDoor();
 	float GetTotalMassOnPlate();
 
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	UPROPERTY(BlueprintAssignable) FOnOpenRequest OpenRequest;
-
-	UPROPERTY(VisibleAnywhere)	float DoorAngle = -90.f;
-	UPROPERTY(EditAnywhere)		float closeDoorDelay = 1.f;
-								float lastTimeOpen;
+	UPROPERTY(BlueprintAssignable) FOnOpenRequest OnOpen;
+	UPROPERTY(BlueprintAssignable) FOnOpenRequest OnClose;
 
 	UPROPERTY(EditAnywhere)		ATriggerVolume* PressurePlate = nullptr;
-								AActor* thisDoor = nullptr;
-
 };
