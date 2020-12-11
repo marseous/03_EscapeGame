@@ -23,6 +23,7 @@ void UPawnComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	
+	if (!PhysicsHandle) { return; }
 	if (PhysicsHandle->GrabbedComponent)
 	{
 		PhysicsHandle->SetTargetLocation(GetReachStart());
@@ -46,12 +47,6 @@ FHitResult UPawnComponent::GetFirstPhysicsBodyInReach()
 		OQP,
 		TraceParams
 	);
-
-	if (Hit.GetActor())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("HIT: %s "),
-			*Hit.GetActor()->GetName())
-	}
 
 	return Hit;
 }
@@ -97,8 +92,9 @@ FVector UPawnComponent::GetReachEnd()
 
 void UPawnComponent::Grab()
 {
+	if (!PhysicsHandle) { return; }
 	auto ActorToGrab = GetFirstPhysicsBodyInReach();
-	
+
 	PhysicsHandle->GrabComponent(
 		ActorToGrab.GetComponent(),
 		NAME_None,
@@ -109,5 +105,6 @@ void UPawnComponent::Grab()
 
 void UPawnComponent::Release()
 {
+	if (!PhysicsHandle) { return; }
 	PhysicsHandle->ReleaseComponent();
 }

@@ -8,6 +8,7 @@
 #include "Engine/TriggerVolume.h"
 #include "DoorOpen.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnOpenRequest);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MYPROJECT_API UDoorOpen : public UActorComponent
@@ -20,18 +21,13 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	void OpenDoor();
-	void CloseDoor();
+	float GetTotalMassOnPlate();
 
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	UPROPERTY(VisibleAnywhere)	float DoorAngle = -90.f;
-	UPROPERTY(EditAnywhere)		float closeDoorDelay = 1.f;
-								float lastTimeOpen;
+	UPROPERTY(BlueprintAssignable) FOnOpenRequest OnOpen;
+	UPROPERTY(BlueprintAssignable) FOnOpenRequest OnClose;
 
-	UPROPERTY(EditAnywhere)		ATriggerVolume* PressurePlate;
-								AActor* player;
-								AActor* thisDoor;
-
+	UPROPERTY(EditAnywhere)		ATriggerVolume* PressurePlate = nullptr;
 };
